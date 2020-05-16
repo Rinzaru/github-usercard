@@ -3,6 +3,20 @@
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
+const card = document.querySelector(".cards");
+
+axios
+  .get("https://api.github.com/users/Rinzaru")
+  .then((response) => {
+    const data = response.data;
+    console.log(data);
+    card.appendChild(githubCards(response.data));
+  })
+  .catch((error) => {
+    console.log("Error", error);
+  });
+
+// axios.get("https://api.github.com/users/");
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
@@ -28,7 +42,13 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = [
+  "tetondan",
+  "dustinmyers",
+  "justsml",
+  "luishrd",
+  "bigknell",
+];
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -49,6 +69,62 @@ const followersArray = [];
       </div>
     </div>
 */
+
+function githubCards(data) {
+  const cardsDiv = document.querySelector(".cards");
+  const card = document.createElement("div");
+  const image = document.createElement("img");
+  const mainDiv = document.createElement("div");
+  const name = document.createElement("h3");
+  const userName = document.createElement("p");
+  const location = document.createElement("p");
+  const profile = document.createElement("p");
+  const anchor = document.createElement("a");
+  const followers = document.createElement("p");
+  const following = document.createElement("p");
+  const bio = document.createElement("p");
+
+  card.classList.add("card");
+  mainDiv.classList.add("card-info");
+  name.classList.add("name");
+  userName.classList.add("userName");
+
+  cardsDiv.appendChild(card);
+  card.appendChild(image);
+  card.appendChild(mainDiv);
+  mainDiv.appendChild(name);
+  mainDiv.appendChild(userName);
+  mainDiv.appendChild(location);
+  mainDiv.appendChild(profile);
+  profile.appendChild(anchor);
+  mainDiv.appendChild(followers);
+  mainDiv.appendChild(following);
+  mainDiv.appendChild(bio);
+
+  name.textContent = data.name;
+  userName.textContent = data.login;
+  image.src = data.avatar_url;
+  location.textContent = `Location: ${data.location}`;
+  anchor.textContent = `Profile: ${(anchor.href = data.html_url)}`;
+  followers.textContent = `Followers: ${data.followers}`;
+  following.textContent = `Following: ${data.following}`;
+  bio.textContent = `Bio: ${data.bio}`;
+
+  return card;
+}
+
+followersArray.forEach((followers) => {
+  axios
+    .get(`https://api.github.com/users/${followers}`)
+    .then((response) => {
+      const data = response.data;
+      console.log(data);
+      card.appendChild(githubCards(response.data));
+    })
+    .catch((error) => {
+      console.log("Error", error);
+    });
+});
 
 /*
   List of LS Instructors Github username's:
